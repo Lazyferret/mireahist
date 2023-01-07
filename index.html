@@ -10,7 +10,7 @@
 		   h1,h2,h3,h4,h5,h6,p,label,a{color:black;}
          h1 {font-size: 4rem;}
          h2 {font-size: 5rem;}
-         label {font-size: 4rem;}
+         label {font-size: 3.8rem;}
          p {font-size: 2.8rem;}
          input {transform: scale(3);}
          button {transform: scale(3.5);}
@@ -21,6 +21,7 @@
    </head>
    <script src="HistoryQuestionsNew.js"></script>
    <script>
+   var historyChoices = [];
    function getMultipleRandom(arr, num) {
       const shuffled = [...arr].sort(() => 0.5 - Math.random());
 
@@ -28,13 +29,53 @@
       }
 	   var quiz = getMultipleRandom(data,10);
       
-      
+
       var currentQuestion = 0;
+      var backCurrentQuestion = -1;
       var score = 0;
       var askingQuestion = true;
-      
+
+      function back(){
+
+      loadBackQuestion();
+      }
+      function loadBackQuestion(){
+
+      var radioButton;
+
+      //clear out radio buttons from previous question
+      document.getElementById('content').innerHTML = "";
+
+      //loop through choices, and create radio buttons
+      for(var i=0; i < quiz[currentQuestion+backCurrentQuestion]["choices"].length; i++){
+
+      	radioButton  = document.createElement('input');
+      	radioButton.type = 'radio';
+      	radioButton.name = 'quiz';
+      	radioButton.id = 'choice'+ (i+1);
+      	radioButton.value = quiz[currentQuestion+backCurrentQuestion]["choices"][i];
+
+      	//create label tag, which hold the actual text of the choices
+      	var label = document.createElement('label');
+      	label.setAttribute('for','choice'+ (i+1));
+      	label.innerHTML = quiz[currentQuestion+backCurrentQuestion]["choices"][i];
+
+      	//create a <br> tag to separate options
+      	var br = document.createElement('br');
+
+      	//attach them to content. Attach br tag, then label, then radio button
+      	document.getElementById('content').insertBefore(br, null);
+      	document.getElementById('content').insertBefore(label, br);
+      	document.getElementById('content').insertBefore(radioButton, label);
+      }
+
+      //load the question
+      document.getElementById('question').innerHTML = quiz[currentQuestion+backCurrentQuestion]["question"];
+      document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных. '+ String(parseInt(currentQuestion)+parseInt(1))+'/'+quiz.length+'</p>';
+
+      backCurrentQuestion--;
+      }
       function loadQuestion(){
-      
       //set temporary variable for creating radio buttons
       var radioButton;
       
@@ -66,13 +107,14 @@
       
       //load the question
       document.getElementById('question').innerHTML = quiz[currentQuestion]["question"];
+      document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных. '+ String(parseInt(currentQuestion)+parseInt(1))+'/'+quiz.length+'</p>';
       
       //setup score for first time
       if(currentQuestion == 0){
-      	document.getElementById('score').innerHTML = '<p>Счёт: 0 правильных из ' + quiz.length +' возможных</p>';
+      	document.getElementById('score').innerHTML = '<p>Счёт: 0 правильных из ' + quiz.length +' возможных. ' + String(parseInt(currentQuestion)+parseInt(1)) +'/'+quiz.length+'</p>';
       }
       }
-      
+      var correctIndex;
       function checkAnswer(){
       
       //are we asking a question, or proceeding to next question?
@@ -84,7 +126,7 @@
       	
       	//determine which radio button they clicked
       	var userpick;
-      	var correctIndex;
+
       	var radios = document.getElementsByName('quiz');
       	for(var i=0; i < radios.length; i++){
       		if(radios[i].checked){ //if this radio button is checked
@@ -93,6 +135,7 @@
       		//get index of correct answer
       		if(radios[i].value == quiz[currentQuestion]["correct"]){
       			correctIndex = i;
+
       		}
       	}
       	
@@ -102,21 +145,23 @@
       		document.getElementsByTagName('label')[correctIndex].style.color = "green";
       		document.getElementsByTagName('label')[correctIndex].style.fontWeight = "bold";
       		document.getElementById('explanation').innerHTML = "<h3>Correct!</h3>";
+      		historyChoices.push([correctIndex,"green"]);
       	} else {
       		document.getElementsByTagName('label')[correctIndex].style.color = "red";
       		document.getElementsByTagName('label')[correctIndex].style.fontWeight = "bold";
       		document.getElementById('explanation').innerHTML = "<h3>Incorrect</h3>";
+      		historyChoices.push([correctIndex,"red"]);
       	}
       	
       	document.getElementById('explanation').innerHTML += '<p>' + quiz[currentQuestion]["explanation"] + '</p>';
-      	document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных</p>';
+      	document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных. '+ String(parseInt(currentQuestion)+parseInt(1))+'/'+quiz.length+'</p>';
       	
       	
       } else { //reset form and move to next question
       
       	//setting up so user can ask a question
       	askingQuestion = true;
-      	
+
       	//change button text back to 'submit answer'
       	document.getElementById('check').innerHTML = 'Подтвердить';
       	
@@ -138,11 +183,12 @@
       document.getElementById('content').innerHTML = '<h2>Вы завершили попытку</h2>';
       document.getElementById('content').innerHTML += '<p>Результаты:</p>';
       document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '%</h2>';
-      document.getElementById('content').innerHTML += '<button class="btn btn-primary" onclick="window.location.reload();">Повторить</button>'
+      document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;">Повторить</button>'
       //delete the button
-      var button = document.getElementById('check');
-      button.parentNode.removeChild(button); //js requires you to delete elements from the parent
-      
+      var button_check = document.getElementById('check');
+      var button_back = document.getElementById('back');
+      button_check.parentNode.removeChild(button_check); //js requires you to delete elements from the parent
+      button_back.parentNode.removeChild(button_back);
       //remove question
       document.getElementById('question').innerHTML = "";
       
@@ -172,8 +218,13 @@
             <div id="explanation"></div>
          </div>
       </div>
-      <div class="row lg-3 fixed-bottom" id="frame">
-         <button id="check" onclick="checkAnswer()" class="btn btn-primary">Подтвердить</button>
+      <div class="row lg-3 fixed-bottom" id="frame" style="margin-bottom: 30px;">
+         <div class="col">
+            <button id="back" onclick="back()" class="btn btn-secondary" style="width:20%;margin-left:10%">Назад</button>
+         </div>
+         <div class="col">
+            <button id="check" onclick="checkAnswer()" class="btn btn-primary" style="width:50%;margin-left:10%">Подтвердить</button>
+         </div>
       </div>
       
       </div>
