@@ -40,25 +40,29 @@
       loadBackQuestion();
       }
       function loadBackQuestion(){
-
+      askingQuestion = false;
       var radioButton;
 
       //clear out radio buttons from previous question
       document.getElementById('content').innerHTML = "";
-
+      var localCurrentQuestion = currentQuestion+backCurrentQuestion;
+      var localCorrectIndex;
+      if (localCurrentQuestion<0){
+         localCurrentQuestion=0;
+      }
       //loop through choices, and create radio buttons
-      for(var i=0; i < quiz[currentQuestion+backCurrentQuestion]["choices"].length; i++){
+      for(var i=0; i < quiz[localCurrentQuestion]["choices"].length; i++){
 
       	radioButton  = document.createElement('input');
       	radioButton.type = 'radio';
       	radioButton.name = 'quiz';
       	radioButton.id = 'choice'+ (i+1);
-      	radioButton.value = quiz[currentQuestion+backCurrentQuestion]["choices"][i];
+      	radioButton.value = quiz[localCurrentQuestion]["choices"][i];
 
       	//create label tag, which hold the actual text of the choices
       	var label = document.createElement('label');
       	label.setAttribute('for','choice'+ (i+1));
-      	label.innerHTML = quiz[currentQuestion+backCurrentQuestion]["choices"][i];
+      	label.innerHTML = quiz[localCurrentQuestion]["choices"][i];
 
       	//create a <br> tag to separate options
       	var br = document.createElement('br');
@@ -70,9 +74,18 @@
       }
 
       //load the question
-      document.getElementById('question').innerHTML = quiz[currentQuestion+backCurrentQuestion]["question"];
-      document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных. '+ String(parseInt(currentQuestion)+parseInt(1))+'/'+quiz.length+'</p>';
+      document.getElementById('question').innerHTML = quiz[localCurrentQuestion]["question"];
+      document.getElementById('score').innerHTML = '<p>Счёт: '+ score +' правильных из ' + quiz.length +' возможных. '+ String(parseInt(localCurrentQuestion)+parseInt(1))+'/'+quiz.length+'</p>';
+      var radios = document.getElementsByName('quiz');
+      	for(var i=0; i < radios.length; i++){
 
+      		if(radios[i].value == quiz[localCurrentQuestion]["correct"]){
+      			localCorrectIndex = i;
+
+      		}
+      	}
+      document.getElementsByTagName('label')[localCorrectIndex].style.color = "green";
+      document.getElementsByTagName('label')[localCorrectIndex].style.fontWeight = "bold";
       backCurrentQuestion--;
       }
       function loadQuestion(){
@@ -116,7 +129,7 @@
       }
       var correctIndex;
       function checkAnswer(){
-      
+
       //are we asking a question, or proceeding to next question?
       if(askingQuestion){
       	
@@ -169,8 +182,15 @@
       	
       	//if we're not on last question, increase question number
       	if(currentQuestion < quiz.length - 1){
+      	    if (backCurrentQuestion==-1){
       		currentQuestion++;
+      		backCurrentQuestion = -1;
       		loadQuestion();
+      		}
+      		else{
+      		backCurrentQuestion = -1;
+      		loadQuestion();
+      		}
       	} else {
       		showFinalResults();
       	}
@@ -183,7 +203,7 @@
       document.getElementById('content').innerHTML = '<h2>Вы завершили попытку</h2>';
       document.getElementById('content').innerHTML += '<p>Результаты:</p>';
       document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '%</h2>';
-      document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;">Повторить</button>'
+      document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;width:100%">Повторить</button>'
       //delete the button
       var button_check = document.getElementById('check');
       var button_back = document.getElementById('back');
@@ -220,10 +240,10 @@
       </div>
       <div class="row lg-3 fixed-bottom" id="frame" style="margin-bottom: 30px;">
          <div class="col">
-            <button id="back" onclick="back()" class="btn btn-secondary" style="width:20%;margin-left:10%">Назад</button>
+            <button id="back" onclick="back()" class="btn btn-secondary" style="width:15%;margin-left:15%">Назад</button>
          </div>
          <div class="col">
-            <button id="check" onclick="checkAnswer()" class="btn btn-primary" style="width:50%;margin-left:10%">Подтвердить</button>
+            <button id="check" onclick="checkAnswer()" class="btn btn-primary" style="width:45%;float:right;margin-right:55%">Подтвердить</button>
          </div>
       </div>
       
