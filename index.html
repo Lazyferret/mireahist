@@ -14,6 +14,7 @@
          p {font-size: 2.8rem;}
          input {transform: scale(3);}
          button {transform: scale(3.5);}
+         a{font-size: 2.3rem;}
 
 
          
@@ -21,6 +22,28 @@
    </head>
    <script src="HistoryQuestionsNew.js"></script>
    <script>
+   function choseTopic(){
+   var div = document.createElement('div');
+   div.innerHTML = "<h2>Выберите тему</h2>";
+   div.innerHTML += "<a onclick='setQuiz(data)'>Выборка по всем темам</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic1)'>Закономерности и основные этапы исторического развития</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic2)'>Древняя Русь в контексте европейской истории средневековья</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic3)'>Образование Российского централизованного государства. Становление самодержавия</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic4)'>Россия в начале Нового времени</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic5)'>Век просвещения</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic6)'>Российская империя на пути к индустриальному обществу</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic7)'>Социально-экономическая модернизация</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic8)'>Революционный кризис в России 1917</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic9)'>Советская Россия</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic10)'>Истоки, основные этапы, последствия кризиса международных отношений первой половины ХХ века</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic11)'>Советский Союз в послевоенный период</a><hr>";
+   div.innerHTML += "<a onclick='setQuiz(topic12)'>Современная Россия</a><hr>";
+   div.innerHTML += "<a onclick='var arrrr=[topic1,topic2,topic3,topic4,topic5,topic6,topic7,topic8,topic9,topic10,topic11,topic12];setQuiz(arrrr[Math.floor(Math.random() * arrrr.length)])'>Случайная тема</a><hr>";
+
+   document.getElementById("entrance").innerHTML+=div.innerHTML;
+
+
+   }
    var historyChoices = [];
    function getMultipleRandom(arr, num) {
       var shuffled=[...arr];
@@ -39,6 +62,15 @@
   }
 
       return shuffled.slice(0, num);
+      }
+      var quiz;
+      function setQuiz(topic){
+      quiz = getMultipleRandom(topic,10);
+      document.getElementById("container-lg").style="";
+      document.getElementById("entrance")
+      var elem = document.getElementById("entrance");
+	  elem.parentNode.removeChild(elem);
+      loadQuestion();
       }
 	   var quiz = getMultipleRandom(data,10);
       
@@ -228,18 +260,21 @@
       }
       
       
-      window.onload = loadQuestion;
-	  loadQuestion();
+      //window.onload = loadQuestion;
+	  //loadQuestion();
+	  window.onload = choseTopic;
+
       
    </script>
    <body>
-      <div class="container-lg">
+      <div id="entrance" style="margin: 0 auto; text-align: center;"></div>
+      <div id="container-lg" style="visibility:hidden" class="container-lg">
         
       <div class="row mb-3" id="frame">
          <div id="score">
-            <p>score: 0 right answers out of 0 possible</p>
+            <p>Выберите тему</p>
          </div>
-         <h2 id="question">Question here</h2>
+         <h2 id="question"></h2>
          <div id="content">
             <input type="radio" id="quiz" value="1" name="fav_language">
             <hr>

@@ -7781,3 +7781,15 @@
         "explanation": ""
     }
 ];
+topic1=data.slice(0,31);
+topic2=data.slice(31,136);
+topic3=data.slice(136,220);
+topic4=data.slice(220,254);
+topic5=data.slice(254,329);
+topic6=data.slice(329,408);
+topic7=data.slice(408,449);
+topic8=data.slice(449,489);
+topic9=data.slice(489,533);
+topic10=data.slice(533,602);
+topic11=data.slice(602,658);
+topic12=data.slice(658,703);
