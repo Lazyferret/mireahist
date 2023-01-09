@@ -237,6 +237,7 @@
       grade=16+score*2;
       grade_without= score*2;
       grade_color="green"
+      grade_color_without="green"
       if (score<9){
       grade=2;
       grade_color="red"
@@ -252,13 +253,16 @@
       grade=5;
       }
       else{
-      grade=0;
+      grade=2;
+      grade_color="red"
       }
       if (score<9){
       grade_without=2;
+      grade_color_without="red"
       }
       else if (30<=grade_without && grade_without<=39){
       grade_without=3;
+      grade_color_without="yellow"
       }
       else if (40<=grade_without && grade_without<=55){
       grade_without=4;
@@ -267,7 +271,8 @@
       grade_without=5;
       }
       else{
-      grade_without=0;
+      grade_without=2;
+      grade_color="red"
       }
 
       document.getElementById('content').innerHTML = '<h2>Вы завершили попытку</h2>';
@@ -275,7 +280,7 @@
       document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '% (' + score*2+' баллов)</h2>';
       if (quiz.length!=10){
       document.getElementById('content').innerHTML += '<p>С 16-ю дополнительными баллами на экзамене вы бы получили <span style=color:'+grade_color+';font-weight:bold;>'+grade+'</span></p>';
-      document.getElementById('content').innerHTML += '<p>Без дополнительных баллов на экзамене вы бы получили <span style=color:'+grade_color+';font-weight:bold;>'+grade_without+'</span></p>';
+      document.getElementById('content').innerHTML += '<p>Без дополнительных баллов на экзамене вы бы получили <span style=color:'+grade_color_without+';font-weight:bold;>'+grade_without+'</span></p>';
       }
       document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;width:100%">Повторить</button>'
       //delete the button
