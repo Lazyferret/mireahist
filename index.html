@@ -43,8 +43,8 @@
 
    document.getElementById("entrance").innerHTML+=div.innerHTML;
 
-
    }
+   var locShuffled;
    var historyChoices = [];
 
       var quiz;
@@ -130,18 +130,19 @@
       document.getElementById('content').innerHTML = "";
       
       //loop through choices, and create radio buttons
+      locShuffled = getMultipleRandom(quiz[currentQuestion]["choices"],quiz[currentQuestion]["choices"].length)
       for(var i=0; i < quiz[currentQuestion]["choices"].length; i++){
       	
       	radioButton  = document.createElement('input');
       	radioButton.type = 'radio';
       	radioButton.name = 'quiz';
       	radioButton.id = 'choice'+ (i+1);
-      	radioButton.value = quiz[currentQuestion]["choices"][i];
+      	radioButton.value = locShuffled[i];
       	
       	//create label tag, which hold the actual text of the choices
       	var label = document.createElement('label');
       	label.setAttribute('for','choice'+ (i+1));
-      	label.innerHTML = quiz[currentQuestion]["choices"][i];
+      	label.innerHTML = locShuffled[i];
       	
       	//create a <br> tag to separate options
       	var br = document.createElement('br');
@@ -235,11 +236,14 @@
       function showFinalResults(){
       grade=16+score*2;
       grade_without= score*2;
+      grade_color="green"
       if (score<9){
       grade=2;
+      grade_color="red"
       }
       else if (30<=grade && grade<=39){
       grade=3;
+      grade_color="yellow"
       }
       else if (40<=grade && grade<=55){
       grade=4;
@@ -270,8 +274,8 @@
       document.getElementById('content').innerHTML += '<p>Результаты:</p>';
       document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '% (' + score*2+' баллов)</h2>';
       if (quiz.length!=10){
-      document.getElementById('content').innerHTML += '<p>С 16-ю дополнительными баллами на экзамене вы бы получили <span style=color:green;font-weight:bold;>'+grade+'</span></p>';
-      document.getElementById('content').innerHTML += '<p>Без дополнительных баллов на экзамене вы бы получили <span style=color:green;font-weight:bold;>'+grade_without+'</span></p>';
+      document.getElementById('content').innerHTML += '<p>С 16-ю дополнительными баллами на экзамене вы бы получили <span style=color:'+grade_color+';font-weight:bold;>'+grade+'</span></p>';
+      document.getElementById('content').innerHTML += '<p>Без дополнительных баллов на экзамене вы бы получили <span style=color:'+grade_color+';font-weight:bold;>'+grade_without+'</span></p>';
       }
       document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;width:100%">Повторить</button>'
       //delete the button
