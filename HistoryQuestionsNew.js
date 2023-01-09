@@ -4132,17 +4132,6 @@
         "explanation": ""
     },
     {
-        "question": " К правлению Александра 1 относится:",
-        "choices": [
-            "Создание Синода",
-            "разработка нового свода законов",
-            "присоединение Правобережной Украины",
-            "создание Казанского и Харьковского университетов "
-        ],
-        "correct": "разработка нового свода законов",
-        "explanation": ""
-    },
-    {
         "question": " Перевод крестьян на обязательный выкуп означал",
         "choices": [
             "начало освобождения крепостных крестьян",
@@ -7781,6 +7770,24 @@
         "explanation": ""
     }
 ];
+function getMultipleRandom(arr, num) {
+      var shuffled=[...arr];
+      let currentIndex = shuffled.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [shuffled[currentIndex], shuffled[randomIndex]] = [
+      shuffled[randomIndex], shuffled[currentIndex]];
+  }
+
+      return shuffled.slice(0, num);
+      }
 topic1=data.slice(0,31);
 topic2=data.slice(31,136);
 topic3=data.slice(136,220);
@@ -7793,3 +7800,4 @@ topic9=data.slice(489,533);
 topic10=data.slice(533,602);
 topic11=data.slice(602,658);
 topic12=data.slice(658,703);
+testLike=[...getMultipleRandom(topic1,2),...getMultipleRandom(topic2,1),...getMultipleRandom(topic3,2),...getMultipleRandom(topic4,2),...getMultipleRandom(topic5,2),...getMultipleRandom(topic6,1),...getMultipleRandom(topic7,2),...getMultipleRandom(topic8,1),...getMultipleRandom(topic9,2),...getMultipleRandom(topic10,1),...getMultipleRandom(topic11,2),...getMultipleRandom(topic12,2)]

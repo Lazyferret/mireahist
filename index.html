@@ -25,6 +25,7 @@
    function choseTopic(){
    var div = document.createElement('div');
    div.innerHTML = "<h2>Выберите тему</h2>";
+   div.innerHTML += "<a onclick='setQuiz(testLike,testLike.length)' style='color:green;font-weight:bold;'>Как на экзамене</a><hr>";
    div.innerHTML += "<a onclick='setQuiz(data)'>Выборка по всем темам</a><hr>";
    div.innerHTML += "<a onclick='setQuiz(topic1)'>Закономерности и основные этапы исторического развития</a><hr>";
    div.innerHTML += "<a onclick='setQuiz(topic2)'>Древняя Русь в контексте европейской истории средневековья</a><hr>";
@@ -45,27 +46,15 @@
 
    }
    var historyChoices = [];
-   function getMultipleRandom(arr, num) {
-      var shuffled=[...arr];
-      let currentIndex = shuffled.length,  randomIndex;
 
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [shuffled[currentIndex], shuffled[randomIndex]] = [
-      shuffled[randomIndex], shuffled[currentIndex]];
-  }
-
-      return shuffled.slice(0, num);
-      }
       var quiz;
-      function setQuiz(topic){
-      quiz = getMultipleRandom(topic,10);
+      function setQuiz(topic,number=10){
+      if (number==10){
+      quiz = getMultipleRandom(topic,number);
+      }
+      else{
+      quiz = topic;
+      }
       document.getElementById("container-lg").style="";
       document.getElementById("entrance")
       var elem = document.getElementById("entrance");
@@ -244,10 +233,43 @@
       }
       
       function showFinalResults(){
-      
+      grade=16+score*2;
+      grade_without= score*2;
+      if (score<9){
+      grade=2;
+      }
+      else if (30<=grade<=39){
+      grade=3;
+      }
+      else if (40<=grade<=55){
+      grade=4;
+      }
+      else if (56<=grade){
+      grade=5;
+      }
+      else{
+      grade=0;
+      }
+      if (score<9){
+      grade_without=2;
+      }
+      else if (30<=grade_without<=39){
+      grade_without=3;
+      }
+      else if (40<=grade_without<=55){
+      grade_without=4;
+      }
+      else if (56<=grade_without){
+      grade_without=5;
+      }
+
       document.getElementById('content').innerHTML = '<h2>Вы завершили попытку</h2>';
       document.getElementById('content').innerHTML += '<p>Результаты:</p>';
-      document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '%</h2>';
+      document.getElementById('content').innerHTML += '<h2>' + score + ' из ' + quiz.length + ' вопросов, ' + Math.round(score/quiz.length * 100) + '% (' + score*2+' баллов)</h2>';
+      if (quiz.length!=10){
+      document.getElementById('content').innerHTML += '<p>С 16-ю дополнительными баллами на экзамене вы бы получили <span style=color:green;font-weight:bold;>'+grade+'</span></p>';
+      document.getElementById('content').innerHTML += '<p>Без дополнительных баллов на экзамене вы бы получили <span style=color:green;font-weight:bold;>'+grade_without+'</span></p>';
+      }
       document.getElementById('content').innerHTML += '<button class="btn btn-success fixed-bottom" onclick="window.location.reload();" style="margin-bottom: 30px;width:100%">Повторить</button>'
       //delete the button
       var button_check = document.getElementById('check');
